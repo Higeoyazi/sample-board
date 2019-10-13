@@ -15,7 +15,8 @@ class PostController extends Controller
     public function index()
     {
         $posts = Post::all();
-        
+        $posts->load('category');
+
         return view('posts.index', [
             'posts' => $posts,
         ]);
