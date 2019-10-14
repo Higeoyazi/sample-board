@@ -29,7 +29,8 @@ class PostController extends Controller
      */
     public function create()
     {
-        //
+        return view('posts.create', [
+        ]);
     }
 
     /**
@@ -38,9 +39,9 @@ class PostController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request  $request)
     {
-        //
+        // dd($request);
     }
 
     /**
