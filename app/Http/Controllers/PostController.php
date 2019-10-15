@@ -16,12 +16,6 @@ class PostController extends Controller
      */
     public function index()
     {
-        // $posts = Post::all();
-        // $posts->load('category','user');
-
-        // return view('posts.index', [
-        //     'posts' => $posts,
-        // ]);
         $q = \Request::query();
 
         if(isset($q['category_id'])){
