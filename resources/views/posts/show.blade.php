@@ -21,5 +21,13 @@
         <p class="card-text">{{ $post->content }}</p>
       </div>
     </div>
+    <div class="p-3">
+      <div class="card">
+        <div class="card-body">
+          <p class="card-text">{{ $post->content }}</p>
+        </div>
+      </div>
+      <a href="{{ route('posts.show', $post->id) }}" class="btn btn-primary">詳細</a>
+    </div>
 </div>
 @endsection
