@@ -56,10 +56,17 @@ class PostController extends Controller
      */
     public function store(PostRequest $request)
     {
-        $post = new Post;
-        $input = $request->only($post->getFillable());
-        
-        $post = $post->create($input);
+        if($request->file('image')->isValid()) {
+            $post = new Post;
+            $input = $request->only($post->getFillable());
+            
+            $filename = $request->file('image')->store('public/image');
+            if(!isset($input['image'])) {
+                array_set($input,'image',basename($filename));
+            }
+
+            $post = $post->create($input);
+        }
 
         return redirect('/');
     }
@@ -72,7 +79,7 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-        $post->load('category', 'user','comments');
+        $post->load('category', 'user','comments.user');
 
         return view('posts.show', [
             'post' => $post,
