@@ -21,15 +21,25 @@ class PostController extends Controller
 
         if(isset($q['category_id'])){
             $posts = Post::latest()->where('category_id', $q['category_id'])->paginate(5);
-            $posts->load('category', 'user');
+            $posts->load('category', 'user', 'tags');
+
             return view('posts.index', [
                 'posts' => $posts,
                 'category_id' => $q['category_id']
             ]);
 
+        } if(isset($q['tag_name'])){
+            $posts = Post::latest()->where('content', 'like', "%{$q['tag_name']}%")->paginate(5);
+            $posts->load('category', 'user', 'tags');
+
+            return view('posts.index', [
+                'posts' => $posts,
+                'tag_name' => $q['tag_name']
+            ]);
+        
         } else {
             $posts = Post::latest()->paginate(5);
-            $posts->load('category', 'user');
+            $posts->load('category', 'user', 'tags');
 
             return view('posts.index', [
                 'posts' => $posts,
