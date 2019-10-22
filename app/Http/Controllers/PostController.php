@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\PostRequest;
 
 use App\Post;
+use App\Tag;
 
 class PostController extends Controller
 {
@@ -58,16 +59,35 @@ class PostController extends Controller
     {
         if($request->file('image')->isValid()) {
             $post = new Post;
-            $input = $request->only($post->getFillable());
-            
+            // $input = $request->only($post->getFillable());
+            $post->user_id = $request->user_id;
+            $post->category_id = $request->category_id;
+            $post->content = $request->content;
+            $post->title = $request->title;
+
             $filename = $request->file('image')->store('public/image');
-            if(!isset($input['image'])) {
-                array_set($input,'image',basename($filename));
+            
+            $post->image = basename($filename);
+            
+            // contentからtagを抽出
+            preg_match_all('/#([a-zA-Z0-9０-９ぁ-んァ-ヶー一-龠]+)/u', $request->content, $match);
+            
+            $tags = [];
+            foreach ($match[1] as $tag) {
+                $found = Tag::firstOrCreate(['tag_name' => $tag]);
+                array_push($tags, $found);
             }
-
-            $post = $post->create($input);
+            
+            $tag_ids = [];
+            
+            foreach ($tags as $tag) {
+                array_push($tag_ids, $tag['id']);
+            }
+            
+            $post->save();
+            $post->tags()->attach($tag_ids);
         }
-
+        
         return redirect('/');
     }
 
